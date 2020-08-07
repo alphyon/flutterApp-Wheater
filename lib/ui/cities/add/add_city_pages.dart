@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wheatherapp/model/City.dart';
 import 'package:wheatherapp/ui/cities/add/add_city_bloc.dart';
 import 'package:wheatherapp/ui/common/header_widget.dart';
 import 'package:wheatherapp/ui/common/loader_widget.dart';
@@ -11,6 +12,13 @@ class AddCityPages extends StatefulWidget {
 
 class _AddCityPagesState extends State<AddCityPages> {
   final bloc = AddCityBloc();
+  void handleAddTap(City city) async {
+    final result = await bloc.addCity(city);
+    if (result) {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -48,6 +56,11 @@ class _AddCityPagesState extends State<AddCityPages> {
                         )),
                   ),
                 ),
+                if (bloc.errorMessage != null)
+                  Text(
+                    bloc.errorMessage,
+                    style: TextStyle(color: Colors.red),
+                  ),
                 const SizedBox(
                   height: 25,
                 ),
@@ -66,7 +79,9 @@ class _AddCityPagesState extends State<AddCityPages> {
                               Icons.add,
                               color: primaryColor,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              handleAddTap(city);
+                            },
                           ),
                         );
                       }),
